@@ -36,7 +36,13 @@ public class MessageProducer implements IMessageProducer {
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
-            }).forEach(foodmsg -> template.convertAndSend("branded-food-exchange", "", foodmsg));
+            }).forEach(foodmsg -> {
+                if (foodmsg.contains("CAMPBELL")) {
+                    template.convertAndSend("branded-food-exchange", "campbell", foodmsg);
+                } else {
+                    template.convertAndSend("branded-food-exchange", "", foodmsg);
+                }
+            });
         } catch (IOException | TimeoutException e) {
             throw new RuntimeException(e);
         }
